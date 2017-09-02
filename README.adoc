@@ -1,0 +1,7 @@
+# gatling-bolt
+
+https://boltprotocol.org/[Bolt] support for http://www.gatling.io[Gatling]. Bolt is the binary protocol to communicate with http://neo4j.com[neo4j]. The goal of this project is to provide support for bolt within gatling in a as seamless way as possible.
+
+2nd goal is to teach myself scala.
+
+ WARN: This project contains my very first lines of scala code, so be prepared to find silly nonsense stuff here. If you do, pls drop me a note.
