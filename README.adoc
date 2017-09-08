@@ -4,4 +4,20 @@ https://boltprotocol.org/[Bolt] support for http://www.gatling.io[Gatling]. Bolt
 
 2nd goal is to teach myself scala.
 
- WARN: This project contains my very first lines of scala code, so be prepared to find silly nonsense stuff here. If you do, pls drop me a note.
+WARNING: This project contains my very first lines of scala code, so be prepared to find silly nonsense stuff here. If you do, pls drop me a note.
+
+## status
+
+For now `gatling-bolt` is in a POC status, connection and basic reporting works.
+
+We're lacking support for more-than-one statement scenarios, validating results and many more.
+
+## build & install
+
+Just do a `sbt package` and copy `./target/scala-2.12/gatling-bolt_2.12-0.1-SNAPSHOT.jar` to your gatling installation at `$GATLING_DIR/...`
+
+## usage
+
+see link:src/test/scala/org/neo4j/gatling/bolt/SimpleCreateSimulation.scala[SimpleCreateSimulation] for now
+
+
