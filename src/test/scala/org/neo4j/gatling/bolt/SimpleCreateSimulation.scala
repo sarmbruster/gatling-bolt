@@ -11,7 +11,7 @@ class SimpleCreateSimulation extends Simulation {
   val testScenario = scenario("simpleCreate")
     .exec(
         cypher("create (n:Dummy) return n")
-    )
+    ).pause(5)
 
   setUp(testScenario.inject(atOnceUsers(1))).protocols(boltConfig)
 

@@ -11,9 +11,10 @@ import io.gatling.core.util.NameGen
 import org.neo4j.driver.v1
 import org.neo4j.driver.v1.Driver
 
+import scala.collection.JavaConverters._
 import scala.util.Try
 
-case class CypherAction(driver: Driver, cypher: Expression[String], statsEngine: StatsEngine, next: Action) extends ChainableAction with NameGen {
+case class CypherAction(driver: Driver, cypher: Expression[String], parameters: Map[String,AnyRef], statsEngine: StatsEngine, next: Action) extends ChainableAction with NameGen {
 
 //  def log(start: Long, end: Long, tried: Try[_], requestName: Expression[String], session: Session, statsEngine: StatsEngine): Unit = {
   def log(start: Long, end: Long, tried: Try[_], requestName: Expression[String], session: Session, statsEngine: StatsEngine): Unit = {
@@ -39,7 +40,7 @@ case class CypherAction(driver: Driver, cypher: Expression[String], statsEngine:
       cypher.apply(session).foreach { resolvedCypherString =>
 
         val tried = Try(
-          neo4jSession.run(resolvedCypherString).consume()
+          neo4jSession.run(resolvedCypherString, parameters.asJava).consume()
         )
         log(start, nowMillis, tried, cypher, session, statsEngine)
       }
