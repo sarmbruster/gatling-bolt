@@ -23,31 +23,30 @@ case class CypherAction(driver: Driver, cypher: Expression[String], parameters: 
       case scala.util.Success(_) => OK
       case scala.util.Failure(_) => KO
     }
-    requestName.apply(session).foreach { resolvedRequestName =>
-      statsEngine.logResponse(session, resolvedRequestName, timing, status, None, None)
-    }
+    statsEngine.logResponse(session, requestName.apply(session).get, timing, status, None, None)
   }
 
   override def name: String = genName("CypherAction")
 
-  override def execute(session: Session): Unit = {
-    val start = nowMillis
-
+  def withSession(block: v1.Session => Unit) : Unit = {
     var neo4jSession: v1.Session = null
     try {
       neo4jSession = driver.session()
-
-      cypher.apply(session).foreach { resolvedCypherString =>
-
-        val tried = Try(
-          neo4jSession.run(resolvedCypherString, parameters.asJava).consume()
-        )
-        log(start, nowMillis, tried, cypher, session, statsEngine)
-      }
-
+      block(neo4jSession)
     } finally {
       neo4jSession.close()
     }
+  }
+
+  override def execute(session: Session): Unit = {
+    val start = nowMillis
+    withSession(neo4jSession => {
+      val tried = Try(
+        neo4jSession.run(cypher.apply(session).get, parameters.asJava).consume()
+      )
+      log(start, nowMillis, tried, cypher, session, statsEngine)
+    })
+
 
     //println(protocol)
     /*val columnStrings = columns.map(
@@ -71,7 +70,7 @@ case class CypherAction(driver: Driver, cypher: Expression[String], parameters: 
 
       case Failure(error) => throw new IllegalArgumentException(error)
     }*/
-    val timing = ResponseTimings(start,nowMillis)
+    val timing = ResponseTimings(start, nowMillis)
     cypher.apply(session).foreach { resolvedRequestName =>
       statsEngine.logResponse(session, resolvedRequestName, timing, OK, None, None)
     }
