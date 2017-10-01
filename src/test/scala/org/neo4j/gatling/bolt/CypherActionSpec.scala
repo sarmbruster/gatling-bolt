@@ -1,0 +1,19 @@
+package org.neo4j.gatling.bolt
+
+import io.gatling.core.Predef._
+import io.gatling.core.stats.writer.ResponseMessage
+
+class CypherActionSpec extends BoltSpec {
+
+  "CypherAction" should "use the request name in the log message" in {
+    val cypher = "create (n) return n"
+    val action = new CypherAction(bolt, cypher, null, statsEngine, next)
+
+    action.execute(session)
+
+    statsEngine.dataWriterMsg should have length 1
+    statsEngine.dataWriterMsg.head.get.asInstanceOf[ResponseMessage].name should equal(cypher)
+
+  }
+
+}
