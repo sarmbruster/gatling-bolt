@@ -70,10 +70,10 @@ case class CypherAction(driver: Driver, cypher: Expression[String], parameters: 
 
       case Failure(error) => throw new IllegalArgumentException(error)
     }*/
-    val timing = ResponseTimings(start, nowMillis)
+   /* val timing = ResponseTimings(start, nowMillis)
     cypher.apply(session).foreach { resolvedRequestName =>
       statsEngine.logResponse(session, resolvedRequestName, timing, OK, None, None)
-    }
+    }*/
     next ! session
   }
 
