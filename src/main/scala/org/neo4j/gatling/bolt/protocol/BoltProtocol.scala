@@ -6,8 +6,7 @@ import io.gatling.core.{CoreComponents, protocol}
 import io.gatling.core.protocol.{Protocol, ProtocolKey}
 import org.neo4j.driver.v1._
 
-class BoltProtocol(uri: String) extends Protocol {
-  val driver = GraphDatabase.driver(uri)
+case class BoltProtocol(driver: Driver) extends Protocol {
 }
 
 object BoltProtocol {
@@ -20,7 +19,7 @@ object BoltProtocol {
     override def protocolClass: Class[protocol.Protocol] = classOf[BoltProtocol].asInstanceOf[Class[io.gatling.core.protocol.Protocol]]
 
     override def defaultProtocolValue(configuration: GatlingConfiguration): BoltProtocol = {
-      return BoltProtocol("bolt://localhost:7687")
+      return BoltProtocol(GraphDatabase.driver("bolt://localhost:7687"))
     }
 //      throw new IllegalStateException("Can't provide a default value for JdbcProtocol")
 
@@ -30,7 +29,6 @@ object BoltProtocol {
 
   }
 
-
-  def apply(uri: String): BoltProtocol = new BoltProtocol(uri)
+  def apply(driver: Driver): BoltProtocol = new BoltProtocol(driver)
 
 }
