@@ -18,6 +18,6 @@ Just do a `sbt package` and copy `./target/scala-2.12/gatling-bolt_2.12-0.1-SNAP
 
 ## usage
 
-see link:src/test/scala/org/neo4j/gatling/bolt/SimpleCreateSimulation.scala[SimpleCreateSimulation] for now
+see link:src/test/scala/org/neo4j/gatling/bolt/simulation/SimpleCreateSimulation.scala[SimpleCreateSimulation] for now
 
 
