@@ -1,13 +1,13 @@
 package org.neo4j.gatling.bolt
 
-import io.gatling.core.session.Expression
+import org.neo4j.driver.v1.AccessMode
 import org.neo4j.gatling.bolt.protocol.BoltProtocol
+import org.neo4j.gatling.bolt.builder.{TransactionOrStatement}
 
 class BoltDsl {
 
   val bolt = BoltProtocol
 
-//  def jdbc(requestName: Expression[String]) = BoltProtocolBuilderBase(requestName)
-  def cypher(cypher: Expression[String], parameters: Map[String, AnyRef] = Map()) = CypherActionBuilder(cypher, parameters)
+  def session(accessMode: AccessMode, transactionOrCypher: TransactionOrStatement, moreTransactionOrCypher: TransactionOrStatement*) = SessionActionBuilder(accessMode, transactionOrCypher +: moreTransactionOrCypher)
 
 }

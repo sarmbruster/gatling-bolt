@@ -4,6 +4,7 @@ import io.gatling.core.Predef._
 import io.gatling.core.scenario.Simulation
 import org.neo4j.driver.v1.GraphDatabase.driver
 import org.neo4j.gatling.bolt.Predef._
+import org.neo4j.gatling.bolt.builder.SessionHelper._
 
 class SimpleCreateSimulation extends Simulation {
 
