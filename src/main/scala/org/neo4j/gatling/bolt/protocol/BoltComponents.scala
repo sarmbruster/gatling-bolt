@@ -5,8 +5,8 @@ import io.gatling.core.session.Session
 
 case class BoltComponents(protocol: BoltProtocol) extends ProtocolComponents {
 
-  override def onStart: Option[(Session) => Session] = None
+  override def onStart: Session => Session = ProtocolComponents.NoopOnStart
 
-  override def onExit: Option[(Session) => Unit] = None
+  override def onExit: Session => Unit = ProtocolComponents.NoopOnExit
 
 }

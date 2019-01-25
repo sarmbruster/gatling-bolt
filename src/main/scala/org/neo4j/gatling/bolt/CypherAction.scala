@@ -1,7 +1,6 @@
 package org.neo4j.gatling.bolt
 
 import io.gatling.commons.stats.{KO, OK}
-import io.gatling.commons.util.ClockSingleton._
 import io.gatling.commons.validation.{Failure, Success}
 import io.gatling.core.action.{Action, ChainableAction}
 import io.gatling.core.session.{Expression, Session}
@@ -18,12 +17,13 @@ case class CypherAction(driver: Driver, cypher: Expression[String], parameters: 
 
 //  def log(start: Long, end: Long, tried: Try[_], requestName: Expression[String], session: Session, statsEngine: StatsEngine): Unit = {
   def log(start: Long, end: Long, tried: Try[_], requestName: Expression[String], session: Session, statsEngine: StatsEngine): Unit = {
-    val timing = ResponseTimings(start, end)
     val status = tried match {
       case scala.util.Success(_) => OK
       case scala.util.Failure(_) => KO
     }
-    statsEngine.logResponse(session, requestName.apply(session).get, timing, status, None, None)
+    requestName.apply(session).map { resolvedRequestName =>
+      statsEngine.logResponse(session, resolvedRequestName, start, end, status, None, None)
+    }
   }
 
   override def name: String = genName("CypherAction")
@@ -39,12 +39,14 @@ case class CypherAction(driver: Driver, cypher: Expression[String], parameters: 
   }
 
   override def execute(session: Session): Unit = {
-    val start = nowMillis
+    val start = System.currentTimeMillis()
     withSession(neo4jSession => {
       val tried = Try(
-        neo4jSession.run(cypher.apply(session).get, parameters.asJava).consume()
+        cypher.apply(session).map { resolvedCypher =>
+          neo4jSession.run(resolvedCypher, parameters.asJava).consume()
+        }
       )
-      log(start, nowMillis, tried, cypher, session, statsEngine)
+      log(start, System.currentTimeMillis(), tried, cypher, session, statsEngine)
     })
 
 
