@@ -1,5 +1,6 @@
 package org.neo4j.gatling.bolt
 
+import java.time.Instant
 import com.dimafeng.testcontainers.{Container, ForAllTestContainer, GenericContainer}
 import io.gatling.core.action.Action
 import io.gatling.core.session.Session
@@ -12,7 +13,7 @@ trait BoltSpec extends FlatSpec with ForAllTestContainer with Matchers {
   var _bolt: Driver = null
   def bolt = _bolt
 
-  val session = Session("scenario", 0)
+  val session = Session("scenario", 0, Instant.now().getEpochSecond)
   val next = new Action {
     override def name: String = "mockAction"
 

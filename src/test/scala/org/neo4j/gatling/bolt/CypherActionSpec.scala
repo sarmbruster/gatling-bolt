@@ -12,7 +12,7 @@ class CypherActionSpec extends BoltSpec {
     action.execute(session)
 
     statsEngine.dataWriterMsg should have length 1
-    statsEngine.dataWriterMsg.head.get.asInstanceOf[ResponseMessage].name should equal(cypher)
+    statsEngine.dataWriterMsg.head(session).toOption.get.asInstanceOf[ResponseMessage].name should equal(cypher)
 
   }
 
