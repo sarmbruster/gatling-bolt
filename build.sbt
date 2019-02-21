@@ -4,11 +4,8 @@ lazy val root=project
       name := "gatling-bolt",
       version := "0.1-SNAPSHOT",
       scalaVersion := "2.12.3",
-//      scalaVersion := "2.11.8",
       libraryDependencies ++= Seq(
-//        "io.gatling.highcharts" % "gatling-charts-highcharts" % "2.2.5",
         "io.gatling.highcharts" % "gatling-charts-highcharts" % "3.0.3",
-//        "io.gatling" % "gatling-test-framework" % "2.2.5",
         "io.gatling" % "gatling-test-framework" % "3.0.3",
 
         "org.neo4j.driver" % "neo4j-java-driver" % "1.7.2",

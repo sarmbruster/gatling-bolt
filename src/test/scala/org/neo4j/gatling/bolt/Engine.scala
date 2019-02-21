@@ -2,7 +2,7 @@ package org.neo4j.gatling.bolt
 
 import io.gatling.core.config.GatlingPropertiesBuilder
 import io.gatling.app.Gatling
-import org.neo4j.gatling.bolt.simulation.{AuthSimulation, CausalClusterSimulation, CypherParametersSimulation, SimpleCreateSimulation}
+import org.neo4j.gatling.bolt.simulation._
 
 object Engine extends App {
 
@@ -11,6 +11,7 @@ object Engine extends App {
     .simulationClass(classOf[CausalClusterSimulation].getName)
     .simulationClass(classOf[AuthSimulation].getName)
     .simulationClass(classOf[CypherParametersSimulation].getName)
+      .simulationClass(classOf[CreateFromFeederSimulation].getName)
 //    .dataDirectory(IDEPathHelper.dataDirectory.toString)
 //    .resultsDirectory(IDEPathHelper.resultsDirectory.toString)
 //    .bodiesDirectory(IDEPathHelper.bodiesDirectory.toString)
