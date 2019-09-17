@@ -10,7 +10,7 @@ import org.neo4j.gatling.bolt.protocol.BoltProtocol
 object SessionHelper {
 
   def transaction(statements: Cypher*) = Transaction(statements)
-  def cypher(cypher: Expression[String], parameters: Map[String,Expression[AnyRef]] = null) = Cypher(cypher, parameters)
+  def cypher(cypher: Expression[String], parameters: Map[String,Expression[AnyRef]] = Map.empty) = Cypher(cypher, parameters)
 
 }
 
