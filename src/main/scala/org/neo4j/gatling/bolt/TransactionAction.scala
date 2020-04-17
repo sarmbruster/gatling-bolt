@@ -11,7 +11,11 @@ import org.neo4j.driver.v1.Driver
 import scala.collection.JavaConverters._
 import scala.util.Try
 
-case class CypherAction(driver: Driver, cypher: Expression[String], parameters: Map[String,Expression[AnyRef]], statsEngine: StatsEngine, next: Action) extends ChainableAction with NameGen {
+import org.neo4j.gatling.bolt.builder.Cypher
+
+case class TransactionAction(driver: Driver, statements: Seq[Cypher],
+                             statsEngine: StatsEngine, next: Action)
+  extends ChainableAction with NameGen {
 
   def log(start: Long, end: Long, tried: Try[_], requestName: Expression[String], session: Session, statsEngine: StatsEngine): Unit = {
     val status = tried match {
@@ -23,15 +27,28 @@ case class CypherAction(driver: Driver, cypher: Expression[String], parameters: 
     }
   }
 
-  override def name: String = genName("CypherAction")
+  override def name: String = genName("TransactionAction")
 
   def withSession(block: v1.Session => Unit) : Unit = {
     var neo4jSession: v1.Session = null
     try {
       neo4jSession = driver.session()
       block(neo4jSession)
-    } finally {
+    }
+    finally {
       neo4jSession.close()
+    }
+  }
+
+  def withTransaction(neo4jSession: v1.Session, block: v1.Transaction => Unit) : Unit = {
+    var tx: v1.Transaction = null
+    try {
+      tx = neo4jSession.beginTransaction()
+      block(tx)
+      tx.success()
+    }
+    finally {
+      tx.close()
     }
   }
 
@@ -42,15 +59,19 @@ case class CypherAction(driver: Driver, cypher: Expression[String], parameters: 
   override def execute(session: Session): Unit = {
     val start = System.currentTimeMillis()
 
-    val resolvedParams : Map[String, AnyRef] = parameters.mapValues(convertToPlainValue(_, session))
-
     withSession(neo4jSession => {
-      val tried = Try(
-        cypher.apply(session).map { resolvedCypher =>
-          neo4jSession.run(resolvedCypher, resolvedParams.asJava).consume()
-        }
-      )
-      log(start, System.currentTimeMillis(), tried, cypher, session, statsEngine)
+      withTransaction(neo4jSession, tx => {
+        val tried = Try(
+          statements.foreach { stmt =>
+            val resolvedParams : Map[String, AnyRef] =
+              stmt.parameters.mapValues(convertToPlainValue(_, session))
+            stmt.cypher.apply(session).map { resolvedCypher =>
+              tx.run(resolvedCypher, resolvedParams.asJava).consume()
+            }
+          }
+        )
+        log(start, System.currentTimeMillis(), tried, statements(0).cypher, session, statsEngine)
+      })
     })
 
     next ! session

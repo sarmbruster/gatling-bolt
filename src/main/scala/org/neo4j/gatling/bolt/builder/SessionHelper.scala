@@ -5,6 +5,7 @@ import io.gatling.core.action.builder.ActionBuilder
 import io.gatling.core.session.Expression
 import io.gatling.core.structure.ScenarioContext
 import org.neo4j.gatling.bolt.CypherAction
+import org.neo4j.gatling.bolt.TransactionAction
 import org.neo4j.gatling.bolt.protocol.BoltProtocol
 
 object SessionHelper {
@@ -18,7 +19,9 @@ trait TransactionOrStatement extends ActionBuilder
 
 case class Transaction(statements: Seq[Cypher]) extends TransactionOrStatement {
   override def build(ctx: ScenarioContext, next: Action) = {
-    null
+    val statsEngine = ctx.coreComponents.statsEngine
+    val driver = ctx.protocolComponentsRegistry.components(BoltProtocol.boltProtocolKey).protocol.driver
+    TransactionAction(driver, statements, statsEngine, next)
   }
 }
 
