@@ -19,3 +19,6 @@ project/plugins/project/
 .idea
 *.iml
 results/
+
+# Mac specific
+.DS_Store
