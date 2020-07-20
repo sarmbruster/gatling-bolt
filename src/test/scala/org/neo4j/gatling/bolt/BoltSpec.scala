@@ -4,7 +4,7 @@ import java.time.Instant
 import com.dimafeng.testcontainers.{Container, ForAllTestContainer, GenericContainer}
 import io.gatling.core.action.Action
 import io.gatling.core.session.Session
-import org.neo4j.driver.v1.{Config, Driver, GraphDatabase}
+import org.neo4j.driver.{Config, Driver, GraphDatabase}
 import org.scalatest.{FlatSpec, Matchers}
 import org.testcontainers.containers.wait.{LogMessageWaitStrategy, Wait}
 

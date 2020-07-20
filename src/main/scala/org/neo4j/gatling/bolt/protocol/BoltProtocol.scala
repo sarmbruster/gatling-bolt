@@ -4,7 +4,7 @@ import akka.actor.ActorSystem
 import io.gatling.core.config.GatlingConfiguration
 import io.gatling.core.{CoreComponents, protocol}
 import io.gatling.core.protocol.{Protocol, ProtocolKey}
-import org.neo4j.driver.v1._
+import org.neo4j.driver._
 
 case class BoltProtocol(driver: Driver) extends Protocol {
 }

@@ -5,9 +5,7 @@ import io.gatling.core.action.{Action, ChainableAction}
 import io.gatling.core.session.{Expression, Session}
 import io.gatling.core.stats.StatsEngine
 import io.gatling.core.util.NameGen
-import org.neo4j.driver.v1
-import org.neo4j.driver.v1.Driver
-
+import org.neo4j.driver._
 import scala.collection.JavaConverters._
 import scala.util.Try
 
@@ -25,8 +23,8 @@ case class CypherAction(driver: Driver, cypher: Expression[String], parameters: 
 
   override def name: String = genName("CypherAction")
 
-  def withSession(block: v1.Session => Unit) : Unit = {
-    var neo4jSession: v1.Session = null
+  def withSession(block: org.neo4j.driver.Session => Unit) : Unit = {
+    var neo4jSession: org.neo4j.driver.Session = null
     try {
       neo4jSession = driver.session()
       block(neo4jSession)

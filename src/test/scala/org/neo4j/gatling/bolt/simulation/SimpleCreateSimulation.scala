@@ -2,7 +2,7 @@ package org.neo4j.gatling.bolt.simulation
 
 import io.gatling.core.Predef._
 import io.gatling.core.scenario.Simulation
-import org.neo4j.driver.v1.GraphDatabase.driver
+import org.neo4j.driver.GraphDatabase.driver
 import org.neo4j.gatling.bolt.Predef._
 import org.neo4j.gatling.bolt.builder.SessionHelper._
 

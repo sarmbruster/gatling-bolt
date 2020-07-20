@@ -6,7 +6,7 @@ import io.gatling.commons.stats.Status
 import io.gatling.core.session.{GroupBlock, Session}
 import io.gatling.core.stats.StatsEngine
 import io.gatling.core.stats.message.ResponseTimings
-import io.gatling.core.stats.writer.{DataWriterMessage, GroupMessage, ResponseMessage, UserMessage}
+import io.gatling.core.stats.writer.{DataWriterMessage, GroupMessage, ResponseMessage, UserEndMessage}
 
 class MockStatsEngine extends StatsEngine with StrictLogging {
 
@@ -16,7 +16,9 @@ class MockStatsEngine extends StatsEngine with StrictLogging {
 
   override def stop(replyTo: ActorRef, exception: Option[Exception]): Unit = {}
 
-  override def logUser(userMessage: UserMessage): Unit = {}
+  override def logUserStart(session: Session): Unit = {}
+
+  override def logUserEnd(userMessage: UserEndMessage): Unit = {}
 
   override def logResponse(
                             session: Session,
