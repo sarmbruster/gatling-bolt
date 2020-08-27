@@ -5,12 +5,10 @@ import io.gatling.core.action.{Action, ChainableAction}
 import io.gatling.core.session.{Expression, Session}
 import io.gatling.core.stats.StatsEngine
 import io.gatling.core.util.NameGen
-import org.neo4j.driver.v1
-import org.neo4j.driver.v1.Driver
+import org.neo4j.driver.{Driver, Transaction, Session => Neo4jSession}
 
 import scala.collection.JavaConverters._
 import scala.util.Try
-
 import org.neo4j.gatling.bolt.builder.Cypher
 
 case class TransactionAction(driver: Driver, statements: Seq[Cypher],
@@ -29,8 +27,8 @@ case class TransactionAction(driver: Driver, statements: Seq[Cypher],
 
   override def name: String = genName("TransactionAction")
 
-  def withSession(block: v1.Session => Unit) : Unit = {
-    var neo4jSession: v1.Session = null
+  def withSession(block: Neo4jSession => Unit) : Unit = {
+    var neo4jSession: Neo4jSession = null
     try {
       neo4jSession = driver.session()
       block(neo4jSession)
@@ -40,12 +38,12 @@ case class TransactionAction(driver: Driver, statements: Seq[Cypher],
     }
   }
 
-  def withTransaction(neo4jSession: v1.Session, block: v1.Transaction => Unit) : Unit = {
-    var tx: v1.Transaction = null
+  def withTransaction(neo4jSession: Neo4jSession, block: Transaction => Unit) : Unit = {
+    var tx: Transaction = null
     try {
       tx = neo4jSession.beginTransaction()
       block(tx)
-      tx.success()
+      tx.commit()
     }
     finally {
       tx.close()
