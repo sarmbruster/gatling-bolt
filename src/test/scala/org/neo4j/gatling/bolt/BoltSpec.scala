@@ -22,9 +22,10 @@ trait BoltSpec extends FlatSpec with ForAllTestContainer with Matchers {
   val statsEngine = new MockStatsEngine
 
 
-  override val container = GenericContainer("neo4j:3.5.17",
+  override val container = GenericContainer("neo4j:4.1.3-enterprise",
     exposedPorts = Seq(7687),
-    env = Map("NEO4J_AUTH" -> "none"),
+    env = Map("NEO4J_AUTH" -> "none",
+        "NEO4J_ACCEPT_LICENSE_AGREEMENT" -> "yes"),
     waitStrategy = new LogMessageWaitStrategy().withRegEx(".*Started.*\\s")
   )
 
@@ -33,7 +34,7 @@ trait BoltSpec extends FlatSpec with ForAllTestContainer with Matchers {
   }
 
   override def afterStart(): Unit = {
-    _bolt = GraphDatabase.driver(s"bolt://${container.containerIpAddress}:${container.mappedPort(7687)}")
+    _bolt = GraphDatabase.driver(s"neo4j://${container.containerIpAddress}:${container.mappedPort(7687)}")
   }
 
 }

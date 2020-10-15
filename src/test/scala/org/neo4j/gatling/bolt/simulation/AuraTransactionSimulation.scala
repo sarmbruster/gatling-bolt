@@ -19,7 +19,7 @@ class ConcurrentNodeWriters extends Simulation {
     "age" -> Random.nextInt(100)
   ))
 
-  val writerBolt = bolt(driver("bolt+routing://{DBID}.databases.neo4j.io:7687",
+  val writerBolt = bolt(driver("neo4j://{DBID}.databases.neo4j.io:7687",
     basic("{USERNAME}", "{PASSWORD}")))
   val writerScenario = scenario("writer")
     .feed(feeder)
