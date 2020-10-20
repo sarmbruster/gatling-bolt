@@ -11,7 +11,7 @@ class SimpleCreateSimulation extends Simulation {
   val boltProtocol = bolt(driver("bolt://localhost:7687"))
   val testScenario = scenario("simpleCreate")
     .exec(
-        cypher("create (n:Dummy) return n")
+        cypher("create (n:Dummy) return n", Map.empty, "neo4j")
     ).pause(1)
   setUp(testScenario.inject(atOnceUsers(1))).protocols(boltProtocol)
 
