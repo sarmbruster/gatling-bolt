@@ -9,7 +9,7 @@ import org.neo4j.driver._
 import scala.collection.JavaConverters._
 import scala.util.Try
 
-case class CypherAction(driver: Driver, cypher: Expression[String], parameters: Map[String,Expression[AnyRef]], statsEngine: StatsEngine, next: Action) extends ChainableAction with NameGen {
+case class CypherAction(driver: Driver, dbName: String, cypher: Expression[String], parameters: Map[String,Expression[AnyRef]], statsEngine: StatsEngine, next: Action) extends ChainableAction with NameGen {
 
   def log(start: Long, end: Long, tried: Try[_], requestName: Expression[String], session: Session, statsEngine: StatsEngine): Unit = {
     val status = tried match {
@@ -26,7 +26,7 @@ case class CypherAction(driver: Driver, cypher: Expression[String], parameters: 
   def withSession(block: org.neo4j.driver.Session => Unit) : Unit = {
     var neo4jSession: org.neo4j.driver.Session = null
     try {
-      neo4jSession = driver.session()
+      neo4jSession = driver.session(if (dbName == null) SessionConfig.defaultConfig() else SessionConfig.forDatabase(dbName) )
       block(neo4jSession)
     } finally {
       neo4jSession.close()
@@ -34,12 +34,11 @@ case class CypherAction(driver: Driver, cypher: Expression[String], parameters: 
   }
 
   def convertToPlainValue(value: Expression[AnyRef], session: Session): AnyRef = {
-    return value.apply(session).toOption.getOrElse(null)
+    value.apply(session).toOption.getOrElse(null)
   }
 
   override def execute(session: Session): Unit = {
     val start = System.currentTimeMillis()
-
     val resolvedParams : Map[String, AnyRef] = parameters.mapValues(convertToPlainValue(_, session))
 
     withSession(neo4jSession => {

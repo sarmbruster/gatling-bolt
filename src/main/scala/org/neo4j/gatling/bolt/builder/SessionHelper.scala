@@ -11,7 +11,7 @@ import org.neo4j.gatling.bolt.protocol.BoltProtocol
 object SessionHelper {
 
   def transaction(statements: Cypher*) = Transaction(statements)
-  def cypher(cypher: Expression[String], parameters: Map[String,Expression[AnyRef]] = Map.empty) = Cypher(cypher, parameters)
+  def cypher(cypher: Expression[String], parameters: Map[String,Expression[AnyRef]] = Map.empty, dbName: String = null) = Cypher(cypher, parameters, dbName)
 
 }
 
@@ -25,10 +25,10 @@ case class Transaction(statements: Seq[Cypher]) extends TransactionOrStatement {
   }
 }
 
-case class Cypher(cypher: Expression[String], parameters: Map[String,Expression[AnyRef]] ) extends TransactionOrStatement {
+case class Cypher(cypher: Expression[String], parameters: Map[String,Expression[AnyRef]], dbName: String ) extends TransactionOrStatement {
   override def build(ctx: ScenarioContext, next: Action) = {
     val statsEngine = ctx.coreComponents.statsEngine
     val driver = ctx.protocolComponentsRegistry.components(BoltProtocol.boltProtocolKey).protocol.driver
-    CypherAction(driver, cypher, parameters, statsEngine, next)
+    CypherAction(driver, dbName, cypher, parameters, statsEngine, next)
   }
 }

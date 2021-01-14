@@ -7,7 +7,7 @@ class CypherActionSpec extends BoltSpec {
 
   "CypherAction" should "use the request name in the log message" in {
     val cypher = "create (n) return n"
-    val action = CypherAction(bolt, cypher, Map.empty, statsEngine, next)
+    val action = CypherAction(bolt, null, cypher, Map.empty, statsEngine, next)
 
     action.execute(session)
 
