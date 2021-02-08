@@ -8,8 +8,8 @@ lazy val root=project
         "io.gatling.highcharts" % "gatling-charts-highcharts" % "3.3.1",
         "io.gatling" % "gatling-test-framework" % "3.3.1",
 
-        "org.neo4j.driver" % "neo4j-java-driver" % "4.1.1",
-        "com.dimafeng" %% "testcontainers-scala" % "0.38.1" % "test",
+        "org.neo4j.driver" % "neo4j-java-driver" % "4.2.0",
+        "com.dimafeng" %% "testcontainers-scala" % "0.39.0" % "test",
 
 //        "org.neo4j.test" % "neo4j-harness" % "3.2.5" % "test",
 //        "com.sun.jersey" % "jersey-core" % "1.19" % "test",
@@ -21,3 +21,11 @@ lazy val root=project
 publishArtifact in(Test, packageBin) := true
 
 parallelExecution in Test := false
+
+//
+// When building a fat jar, discard the dependencies duplicate files that are under META-INF
+//
+assemblyMergeStrategy in assembly := {
+  case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+  case x => MergeStrategy.first
+}

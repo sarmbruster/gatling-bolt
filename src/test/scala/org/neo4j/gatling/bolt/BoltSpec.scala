@@ -22,7 +22,7 @@ trait BoltSpec extends FlatSpec with ForAllTestContainer with Matchers {
   val statsEngine = new MockStatsEngine
 
 
-  override val container = GenericContainer("neo4j:4.1.3-enterprise",
+  override val container = GenericContainer("neo4j:4.2.2-enterprise",
     exposedPorts = Seq(7687),
     env = Map("NEO4J_AUTH" -> "none",
         "NEO4J_ACCEPT_LICENSE_AGREEMENT" -> "yes"),
