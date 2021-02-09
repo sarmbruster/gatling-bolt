@@ -10,7 +10,8 @@ lazy val root=project
 
         "org.neo4j.driver" % "neo4j-java-driver" % "4.2.0",
        // "com.dimafeng" %% "testcontainers-scala" % "0.38.9" % "test",
-        "testcontainers" % "testcontainers-scala" % "0.38.9" % "test",
+       // "testcontainers" %% "testcontainers-scala" % "0.38.9" % "test",
+        "com.dimafeng" %% "testcontainers-scala-scalatest" % "0.38.9" % "test",
 //        "org.neo4j.test" % "neo4j-harness" % "3.2.5" % "test",
 //        "com.sun.jersey" % "jersey-core" % "1.19" % "test",
 
