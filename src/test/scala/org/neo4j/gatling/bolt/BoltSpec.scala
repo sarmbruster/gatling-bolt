@@ -1,14 +1,15 @@
 package org.neo4j.gatling.bolt
 
 import java.time.Instant
-import com.dimafeng.testcontainers.{Container, ForAllTestContainer, GenericContainer}
+import com.dimafeng.testcontainers.{ForAllTestContainer, GenericContainer}
 import io.gatling.core.action.Action
 import io.gatling.core.session.Session
-import org.neo4j.driver.{Config, Driver, GraphDatabase}
-import org.scalatest.{FlatSpec, Matchers}
-import org.testcontainers.containers.wait.{LogMessageWaitStrategy, Wait}
+import org.neo4j.driver.{Driver, GraphDatabase}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
+import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy
 
-trait BoltSpec extends FlatSpec with ForAllTestContainer with Matchers {
+trait BoltSpec extends AnyFlatSpec with ForAllTestContainer with Matchers {
 
   var _bolt: Driver = null
   def bolt = _bolt
