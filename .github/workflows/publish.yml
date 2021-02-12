@@ -1,4 +1,4 @@
-name: Maven Package
+name: Publish GitHub Package
 
 on:
   release:
@@ -20,6 +20,8 @@ jobs:
 
     - name: Build with Sbt
       run: sbt assembly
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
 
     - name: Publish to GitHub Packages Apache Maven
       run: sbt publish
