@@ -22,7 +22,8 @@ lazy val root=project
 publishArtifact in(Test, packageBin) := true
 
 parallelExecution in Test := false
-
+githubOwner := "pecollet"
+githubRepository := "gatling-bolt"
 //
 // When building a fat jar, discard the dependencies duplicate files that are under META-INF
 //
