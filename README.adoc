@@ -14,7 +14,7 @@ We're lacking support for more-than-one statement scenarios, validating results 
 
 ## build & install
 
-Just do a `sbt assembly` and copy `./target/scala-2.12/gatling-bolt_2.12-0.1-SNAPSHOT.jar` to your gatling installation at `$GATLING_HOME/lib/`
+Just do a `sbt assembly` and copy `./target/scala-2.12/gatling-bolt-assembly-0.1-SNAPSHOT.jar` to your gatling installation at `$GATLING_HOME/lib/`
 
 
 If you want to use a separate self-contained gatling project as documented on https://technicaldifficulties.io/2018/11/15/bundling-gatling-tests-into-an-executable-jar/ you need to call `sbt publishM2` to make `gatling-bolt` available in your local maven repo.
